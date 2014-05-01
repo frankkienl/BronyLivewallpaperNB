@@ -113,7 +113,7 @@ public class MyPreferencesActivity extends ListActivity {
             try {
                 String[] list = getAssets().list("");
                 for (final String s : list) {
-                    if (s.equals("images") || s.equals("kioskmode") || s.equals("sounds")
+                    if (s.equals("images") || s.equals("kioskmode") || s.equals("sounds") || s.equals("webkitsec")
                             || s.equals("webkit") || s.equals("fonts") || s.equals("interactions.ini")) {
                         continue;
                     }
