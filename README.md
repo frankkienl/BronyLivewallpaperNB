@@ -11,6 +11,11 @@ Screenshot:
 
 ![Screenshot](https://raw.github.com/frankkienl/BronyLiveWallpaper/master/screenshots/device-2013-09-15-131058.png "Screenshot")
 
+(Samsung Galaxy S5)
+
+![Screenshot](https://raw.github.com/frankkienl/BronyLiveWallpaperNB/master/screenshots/device-2014-06-15-225853.png "Screenshot")
+
+
 Credits
 =======
 
