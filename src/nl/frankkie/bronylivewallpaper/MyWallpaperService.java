@@ -196,7 +196,8 @@ public class MyWallpaperService extends WallpaperService {
             try {
                 String[] list = getAssets().list("");
                 for (String s : list) {
-                    if (s.equals("images") || s.equals("kioskmode") || s.equals("sounds") || s.equals("webkit")) {
+                    if (s.equals("images") || s.equals("kioskmode") || s.equals("sounds") || s.equals("webkitsec")
+                            || s.equals("webkit") || s.equals("fonts") || s.equals("interactions.ini")) {
                         continue;
                     }
                     //included ponies are default on

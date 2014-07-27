@@ -203,10 +203,10 @@ public class Pony {
             gifTimeForNextFrame = System.currentTimeMillis() + 50;
             currentFrameInt++;
         }
-        if (currentFrameInt > gifDecoder.getFrameCount()) {
-            currentFrameInt = 0;
-        }
         try {
+            if (currentFrameInt > gifDecoder.getFrameCount()) { //NullPointerException?
+                currentFrameInt = 0;
+            }
 //            currentFrameBitmap.recycle();
             currentFrameBitmap = null;
             //Runtime.getRuntime().gc();
@@ -304,7 +304,6 @@ public class Pony {
     /**
      * TODO fix die stuff
      */
-
     public Behaviour getRandomBehaviour() {
         Behaviour b = behaviours.get((int) (Math.random() * behaviours.size()));
         CLog.v("BronyLiveWallpaper", "Changing behaviour of " + name);
@@ -324,7 +323,6 @@ public class Pony {
             canvas.drawCircle(positionX, positionY, 15, paint);
         }
     }
-
 
     Movie mMovie;
     long mMovieStart = 0;

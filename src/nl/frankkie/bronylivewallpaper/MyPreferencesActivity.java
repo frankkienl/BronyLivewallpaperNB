@@ -41,19 +41,19 @@ import java.util.ArrayList;
  * Created by FrankkieNL on 31-7-13.
  */
 public class MyPreferencesActivity extends ListActivity {
-
+    
     ArrayList<PonySetting> ponySettings = new ArrayList<PonySetting>();
     MyAdapter adapter;
     LayoutInflater layoutInflater;
     SharedPreferences prefs;
     AssetManager assetManager;
-
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initUI();
     }
-
+    
     protected void initUI() {
         setContentView(R.layout.settings);
         layoutInflater = getLayoutInflater();
@@ -74,7 +74,7 @@ public class MyPreferencesActivity extends ListActivity {
         });
         initPonySettings();
     }
-
+    
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 2507898) {
@@ -86,7 +86,7 @@ public class MyPreferencesActivity extends ListActivity {
             reinitBackground();
         }
     }
-
+    
     private boolean isAppInstalled(String uri) {
         //http://stackoverflow.com/questions/11392183/how-to-check-if-the-application-is-installed-or-not-in-android-programmatically
         PackageManager pm = getPackageManager();
@@ -99,14 +99,15 @@ public class MyPreferencesActivity extends ListActivity {
         }
         return app_installed;
     }
-
+    
     public void initPonySettings() {
         adapter = new MyAdapter();
         MyInitPonySettingsTask task = new MyInitPonySettingsTask();
         task.execute();
     }
-
+    
     public class MyInitPonySettingsTask extends AsyncTask<Void, Void, Void> {
+
         @Override
         protected Void doInBackground(Void... voids) {
             //Get Ponies in Assets
@@ -116,9 +117,10 @@ public class MyPreferencesActivity extends ListActivity {
                     //ignore non-pony folders
                     //uhm maybe its better to ignore folders that dont have an ini file
                     if (s.equals("images") || s.equals("kioskmode") || s.equals("sounds") || s.equals("webkitsec")
-                            || s.equals("webkit") || s.equals("fonts") || s.equals("interactions.ini")) {
+                            || s.equals("webkit") || s.equals("fonts") || s.equals("interactions.ini") 
+                            || s.equals("acrapassword.json") || s.equals("acrapassword_default.json")) {
                         continue;
-                    }                   
+                    }                    
                     ponySettings.add(new PonySetting(s, Util.LOCATION_ASSETS));
                 }
             } catch (Exception e) {
@@ -138,7 +140,7 @@ public class MyPreferencesActivity extends ListActivity {
             }
             return null;
         }
-
+        
         @Override
         protected void onPostExecute(Void aVoid) {
             ListView listView = getListView();
@@ -146,25 +148,24 @@ public class MyPreferencesActivity extends ListActivity {
             listView.setAdapter(adapter);
         }
     }
-
-
+    
     public class MyAdapter extends BaseAdapter {
-
+        
         @Override
         public int getCount() {
             return ponySettings.size();
         }
-
+        
         @Override
         public Object getItem(int i) {
             return ponySettings.get(i);
         }
-
+        
         @Override
         public long getItemId(int i) {
             return i;
         }
-
+        
         @Override
         public View getView(int i, View convertView, ViewGroup viewGroup) {
             if (convertView == null) {
@@ -200,10 +201,10 @@ public class MyPreferencesActivity extends ListActivity {
                 }
                 CSVReader reader = new CSVReader(new InputStreamReader(inputStream));
                 String[] nextLine;
-                    /*
-                    Not all ponies have behaviours name stand, idle or walk
-                    So we use A behavior as last resort.
-                     */
+                /*
+                 Not all ponies have behaviours name stand, idle or walk
+                 So we use A behavior as last resort.
+                 */
                 String[] lastResort = null;
                 while ((nextLine = reader.readNext()) != null) {
                     if (nextLine[0].equalsIgnoreCase("behavior")) {
@@ -236,17 +237,17 @@ public class MyPreferencesActivity extends ListActivity {
             } catch (Exception e) {
                 //ignore, no pic for you
             }
-
+            
             return convertView;
         }
     }
-
+    
     public class LoadImageAsyncTask extends AsyncTask<Void, Void, Drawable> {
-
+        
         public ImageView imageView;
         public String filename;
         public boolean external;
-
+        
         @Override
         protected Drawable doInBackground(Void... voidz) {
             Drawable d;
@@ -261,7 +262,7 @@ public class MyPreferencesActivity extends ListActivity {
                 return null;
             }
         }
-
+        
         @Override
         protected void onPostExecute(Drawable drawable) {
             if (imageView != null) {
@@ -273,53 +274,52 @@ public class MyPreferencesActivity extends ListActivity {
             }
         }
     }
-
+    
     public class PonySetting {
+
         public PonySetting(String name, String location) {
             this.name = name;
             this.location = location;
         }
-
+        
         String name;
         String location;
     }
 
     /*
-    protected void initUI_OLD() {
-        setContentView(R.layout.settings);
-        LayoutInflater inflater = getLayoutInflater();
-        ViewGroup viewGroup = (ViewGroup) findViewById(R.id.settings_container);
-        try {
-            String[] list = getAssets().list("");
-            final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-            for (final String s : list) {
-                if (s.equals("images") || s.equals("kioskmode") || s.equals("sounds") || s.equals("webkit")) {
-                    continue;
-                }
-                //included ponies are default on
-                ViewGroup row = (ViewGroup) inflater.inflate(R.layout.settings_row, viewGroup, false);
-                CheckBox cb = (CheckBox) row.findViewById(R.id.settings_row_cb);
-                cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                        prefs.edit().putBoolean(s, b).commit();
-                        reinitPonies();
-                    }
-                });
-                cb.setChecked(prefs.getBoolean(s, true));
-                TextView tv = (TextView) row.findViewById(R.id.settings_row_tv);
-                tv.setText(s);
-                viewGroup.addView(row);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-    */
-
+     protected void initUI_OLD() {
+     setContentView(R.layout.settings);
+     LayoutInflater inflater = getLayoutInflater();
+     ViewGroup viewGroup = (ViewGroup) findViewById(R.id.settings_container);
+     try {
+     String[] list = getAssets().list("");
+     final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+     for (final String s : list) {
+     if (s.equals("images") || s.equals("kioskmode") || s.equals("sounds") || s.equals("webkit")) {
+     continue;
+     }
+     //included ponies are default on
+     ViewGroup row = (ViewGroup) inflater.inflate(R.layout.settings_row, viewGroup, false);
+     CheckBox cb = (CheckBox) row.findViewById(R.id.settings_row_cb);
+     cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+     @Override
+     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+     prefs.edit().putBoolean(s, b).commit();
+     reinitPonies();
+     }
+     });
+     cb.setChecked(prefs.getBoolean(s, true));
+     TextView tv = (TextView) row.findViewById(R.id.settings_row_tv);
+     tv.setText(s);
+     viewGroup.addView(row);
+     }
+     } catch (Exception e) {
+     e.printStackTrace();
+     }
+     }
+     */
     /**
-     * Dont waste CPU Cycles
-     * by reloading ALL ponies
+     * Dont waste CPU Cycles by reloading ALL ponies
      */
     @Deprecated
     public void reinitPonies() {
@@ -327,7 +327,7 @@ public class MyPreferencesActivity extends ListActivity {
             MyWallpaperService.instance.initPonies();
         }
     }
-
+    
     public void reinitPony(String name, String location, boolean init) {
         if (MyWallpaperService.instance != null) {
             if (init) {
@@ -337,25 +337,25 @@ public class MyPreferencesActivity extends ListActivity {
             }
         }
     }
-
+    
     public void reinitBackground() {
         if (MyWallpaperService.instance != null) {
             MyWallpaperService.instance.loadBackground();
         }
     }
-
+    
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        menu.add(0,0,0,getString(R.string.credits));
-        menu.add(0,1,0,getString(R.string.website));
+        menu.add(0, 0, 0, getString(R.string.credits));
+        menu.add(0, 1, 0, getString(R.string.website));
         return true;
 //        return super.onCreateOptionsMenu(menu);
     }
-
+    
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        switch (id){
+        switch (id) {
             case 0: {
                 showCredits();
                 return true;
@@ -367,20 +367,20 @@ public class MyPreferencesActivity extends ListActivity {
         }
         return false;
     }
-
-    public void showCredits(){
+    
+    public void showCredits() {
         Intent i = new Intent();
         i.setClass(this, CreditsActivity.class);
         startActivity(i);
     }
-
-    public void showWebsite(){
+    
+    public void showWebsite() {
         Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse("http://frankkie.nl/"));
         try {
             startActivity(i);
-        } catch (Exception e){
-            Toast.makeText(this,"Browser could not be started.\nPlease go to:\nwww.frankkie.nl",Toast.LENGTH_LONG).show();
+        } catch (Exception e) {
+            Toast.makeText(this, "Browser could not be started.\nPlease go to:\nwww.frankkie.nl", Toast.LENGTH_LONG).show();
         }
-
+        
     }
 }
